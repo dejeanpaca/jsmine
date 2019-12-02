@@ -51,14 +51,14 @@ function generateGrid () {
     gridElement.appendChild(tableElement);
 
 
-    for(var i = 0; i < rows; ++i) {
+    for(var y = 0; y < rows; ++y) {
         var row = [];
 
         // create new row element and add  it
         var rowElement = document.createElement("tr");
         tableElement.appendChild(rowElement);
 
-        for(var j = 0; j < columns; ++j) {
+        for(var x = 0; x < columns; ++x) {
             var td = document.createElement("td");
             rowElement.appendChild(td);
 
@@ -77,8 +77,8 @@ function generateGrid () {
             cell.image.onclick = function() {
                 checkCell(this.x, this.y);
             }.bind(
-                {x: j,
-                 y: i}
+                {x: x,
+                 y: y}
             );
 
             row.push(cell);
@@ -91,9 +91,9 @@ function generateGrid () {
 
     // set closed images to each cell
 
-    for(var i = 0; i < rows; ++i) {
-        for(var j = 0; j < columns; ++j) {
-            setCellImage(j, i, "https://user-images.githubusercontent.com/56004853/68697433-15073200-057f-11ea-864a-9cb54fe0bfd8.jpg");
+    for(var y = 0; y < rows; ++y) {
+        for(var x = 0; x < columns; ++x) {
+            setCellImage(x, y, "https://user-images.githubusercontent.com/56004853/68697433-15073200-057f-11ea-864a-9cb54fe0bfd8.jpg");
         }
     }
 
@@ -107,12 +107,12 @@ function generateGrid () {
 
     // we need to generate values for cells which are not mines
 
-    for(var i = 0; i < rows; ++i) {
-        for(var j = 0; j < columns; ++j) {
-            var cell = grid[i][j];
+    for(var y = 0; y < rows; ++y) {
+        for(var x = 0; x < columns; ++x) {
+            var cell = grid[y][x];
 
             if(cell.value != -1)
-                cell.value = cellMineCount(j, i);
+                cell.value = cellMineCount(x, y);
         }
     }
 }
