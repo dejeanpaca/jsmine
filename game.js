@@ -91,11 +91,9 @@ function generateGrid () {
 
     // set closed images to each cell
 
-    for(var y = 0; y < rows; ++y) {
-        for(var x = 0; x < columns; ++x) {
-            setCellImage(x, y, "https://user-images.githubusercontent.com/56004853/68697433-15073200-057f-11ea-864a-9cb54fe0bfd8.jpg");
-        }
-    }
+    passGrid(function(x, y, cell) {
+        setCellImage(x, y, "https://user-images.githubusercontent.com/56004853/68697433-15073200-057f-11ea-864a-9cb54fe0bfd8.jpg");
+    });
 
     // add random mines
     for(var i = 0; i < mineCount; ++i) {
@@ -105,16 +103,11 @@ function generateGrid () {
         grid[y][x].value = -1;
     }
 
-    // we need to generate values for cells which are not mines
-
-    for(var y = 0; y < rows; ++y) {
-        for(var x = 0; x < columns; ++x) {
-            var cell = grid[y][x];
-
-            if(cell.value != -1)
-                cell.value = cellMineCount(x, y);
-        }
-    }
+    //  need to generate values for cells which are not mines
+    passGrid(function(x, y, cell) {
+        if(cell.value != -1)
+            cell.value = cellMineCount(x, y);
+    });
 }
 
 function checkCell(x, y) {
@@ -156,14 +149,10 @@ function youDied(x, y) {
     revealCell(x, y);
 
     // reveal all other mines
-    for(var y = 0; y < rows; ++y) {
-        for(var x = 0; x < columns; ++x) {
-            var cell = grid[y][x];
-
-            if(cell.value == -1)
-                revealCell(x, y);
-        }
-    }
+    passGrid(function(x, y, cell) {
+        if(cell.value == -1)
+            revealCell(x, y);
+    });
 }
 
 function revealCell(x, y) {
@@ -260,6 +249,15 @@ function cellMineCount(x, y) {
         ++count;
 
     return count;
+}
+
+function passGrid(cellCallback) {
+    for(var y = 0; y < rows; ++y) {
+        for(var x = 0; x < columns; ++x) {
+            var cell = grid[y][x];
+            cellCallback(x, y, cell);
+        }
+    }
 }
 
 generateGrid();
